@@ -15,10 +15,10 @@ jobs:
   # Teacher's checks: the course rules must hold for every exercise.
   # Runs everywhere, including main (where exercises are unfinished on purpose).
   course-rules:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 25
@@ -26,14 +26,14 @@ jobs:
       - name: Course rules
         run: mvn --batch-mode --no-transfer-progress test -pl course-rules
 
-  # Student feedback: all exercise tests. Skipped on main, where the
-  # skeletons don't compile by design.
+  # Student feedback: all exercise tests. Only on student/<name> branches;
+  # main has unfinished skeletons that do not compile by design.
   tests:
-    if: (github.head_ref || github.ref_name) != 'main'
-    runs-on: ubuntu-latest
+    if: startsWith(github.head_ref || github.ref_name, 'student/')
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 25
@@ -42,7 +42,7 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress test
       - name: Upload test reports
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-reports
           path: "**/target/surefire-reports/"
