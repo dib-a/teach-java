@@ -1,0 +1,21 @@
+name: Course rules
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+
+jobs:
+  branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Branch must be named student/<name>
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          if [[ "$BRANCH" =~ ^student/[a-z0-9][a-z0-9-]*$ ]]; then
+            echo "Branch '$BRANCH' is fine."
+          else
+            echo "::error::Branch '$BRANCH' is not allowed. Name your branch student/<name>, e.g. student/alice (lowercase letters, digits and dashes)."
+            exit 1
+          fi
