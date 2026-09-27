@@ -17,6 +17,7 @@
     <modules>
         <module>course-rules</module>
         <module>exercise-01-hello</module>
+        <module>exercise-02-calculator</module>
     </modules>
 
     <properties>
